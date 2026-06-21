@@ -4,16 +4,16 @@ import { removeItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
 
 const CartItem = ({ onContinueShopping }) => {
+  // ✅ Access cart items from Redux store
   const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
 
-  // Calculate total amount for all products in the cart
+  // ✅ Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
     return cart
       .reduce(
         (total, item) =>
-          total +
-          parseFloat(item.cost.substring(1)) * item.quantity,
+          total + parseFloat(item.cost.substring(1)) * item.quantity,
         0
       )
       .toFixed(2);
@@ -27,6 +27,7 @@ const CartItem = ({ onContinueShopping }) => {
     alert('Functionality to be added for future reference');
   };
 
+  // ✅ Dispatch updateQuantity to increment item count
   const handleIncrement = (item) => {
     dispatch(
       updateQuantity({
@@ -36,6 +37,7 @@ const CartItem = ({ onContinueShopping }) => {
     );
   };
 
+  // ✅ Dispatch updateQuantity or removeItem when quantity reaches 0
   const handleDecrement = (item) => {
     if (item.quantity > 1) {
       dispatch(
@@ -49,15 +51,14 @@ const CartItem = ({ onContinueShopping }) => {
     }
   };
 
+  // ✅ Dispatch removeItem to delete item completely from cart
   const handleRemove = (item) => {
     dispatch(removeItem(item.name));
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
-    return (
-      parseFloat(item.cost.substring(1)) * item.quantity
-    ).toFixed(2);
+    return (parseFloat(item.cost.substring(1)) * item.quantity).toFixed(2);
   };
 
   return (
@@ -76,15 +77,12 @@ const CartItem = ({ onContinueShopping }) => {
             />
 
             <div className="cart-item-details">
-              <div className="cart-item-name">
-                {item.name}
-              </div>
+              <div className="cart-item-name">{item.name}</div>
 
-              <div className="cart-item-cost">
-                {item.cost}
-              </div>
+              <div className="cart-item-cost">{item.cost}</div>
 
               <div className="cart-item-quantity">
+                {/* ✅ Decrement: reduces quantity or removes item if quantity is 1 */}
                 <button
                   className="cart-item-button cart-item-button-dec"
                   onClick={() => handleDecrement(item)}
@@ -96,6 +94,7 @@ const CartItem = ({ onContinueShopping }) => {
                   {item.quantity}
                 </span>
 
+                {/* ✅ Increment: increases quantity in Redux store */}
                 <button
                   className="cart-item-button cart-item-button-inc"
                   onClick={() => handleIncrement(item)}
@@ -108,6 +107,7 @@ const CartItem = ({ onContinueShopping }) => {
                 Total: ${calculateTotalCost(item)}
               </div>
 
+              {/* ✅ Delete: removes item completely from Redux store */}
               <button
                 className="cart-item-delete"
                 onClick={() => handleRemove(item)}
